@@ -2,84 +2,47 @@ package com.example.android.tabletennisscorecounter;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+
+import static com.example.android.tabletennisscorecounter.R.id.ScoreA;
+import static com.example.android.tabletennisscorecounter.R.id.ScoreB;
+import static com.example.android.tabletennisscorecounter.R.id.SetsA;
+import static com.example.android.tabletennisscorecounter.R.id.SetsB;
+import static com.example.android.tabletennisscorecounter.R.id.WinnerText;
+import static com.example.android.tabletennisscorecounter.R.id.badServeTextA;
+import static com.example.android.tabletennisscorecounter.R.id.badServeTextB;
 
 
 public class MainActivity extends AppCompatActivity {
-    int ScoreA = 0;
-    int ScoreB = 0;
-    int SetsA = 0;
-    int SetsB = 0;
+    int scoreA = 0;
+    int scoreB = 0;
+    int setsA = 0;
+    int setsB = 0;
+    int badServeA = 0;
+    int badServeB = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
     /**
      * Increase the score for Player A by 1 point.
      */
     public void addpointPlayerA(View v) {
-        ScoreA = ScoreA +1;
-        displayForPlayerA(ScoreA);
-        if ((ScoreA >=11) && ((ScoreA - ScoreB) >=2)) {
-            SetsA = SetsA + 1;
-            ScoreA = 0;
-            ScoreB = 0;
-            displayForSetsA(SetsA);
-            displayForPlayerA(ScoreA);
-            displayForPlayerB(ScoreB);
-
-            }
-            if ((SetsA >=3)) {
-                String WinnerMessage = "Player A wins!:)";
-                DisplayWinnerMessageA(WinnerMessage);
-            }
-
-
+       AddPointToPlayer(0);
         }
-    public void DisplayWinnerMessageA(String WinnerMessage) {
-        TextView scoreView = (TextView) findViewById(R.id.SetsA);
-        scoreView.setText(WinnerMessage);
-    }
-    public void DisplayWinnerMessageB(String WinnerMessage) {
-        TextView scoreView = (TextView) findViewById(R.id.SetsB);
-        scoreView.setText(WinnerMessage);
 
- }
 
     private void displayForSetsA(int setsA) {
-        TextView scoreView = (TextView) findViewById(R.id.SetsA);
+        TextView scoreView = (TextView) findViewById(SetsA);
         scoreView.setText(String.valueOf(setsA));
 
     }
     private void displayForSetsB(int setsB) {
-        TextView scoreView = (TextView) findViewById(R.id.SetsB);
+        TextView scoreView = (TextView) findViewById(SetsB);
         scoreView.setText(String.valueOf(setsB));
     }
 
@@ -88,47 +51,165 @@ public class MainActivity extends AppCompatActivity {
      * Displays the given score for Player A.
      */
     public void displayForPlayerA(int score) {
-        TextView scoreView = (TextView) findViewById(R.id.ScoreA);
+        TextView scoreView = (TextView) findViewById(ScoreA);
         scoreView.setText(String.valueOf(score));
     }
     /**
      * Increase the score for Player B by 1 point.
      */
     public void addpointPlayerB(View v) {
-        ScoreB = ScoreB + 1;
-        displayForPlayerB(ScoreB);
-        if ((ScoreB >= 11) && ((ScoreB - ScoreA) >= 2)) {
-            SetsB = SetsB + 1;
-            ScoreA = 0;
-            ScoreB = 0;
-            displayForSetsB(SetsB);
-            displayForPlayerA(ScoreA);
-            displayForPlayerB(ScoreB);
-        }
-        if ((SetsB >=3)) {
-            String WinnerMessage = "Player B wins!:)";
-            DisplayWinnerMessageB(WinnerMessage);
-        }
+        AddPointToPlayer(1);
     }
 
 
-
-    /**
-     * Displays the given score for Player B.
-     */
+    public void displayWinnerText(String text){
+        TextView textView = (TextView) findViewById(R.id.WinnerText);
+        textView.setText(text);
+    }
     public void displayForPlayerB(int score) {
-        TextView scoreView = (TextView) findViewById(R.id.ScoreB);
+        TextView scoreView = (TextView) findViewById(ScoreB);
+        scoreView.setText(String.valueOf(score));
+          }
+
+
+     public void displayForBadServeA(int score) {
+         TextView scoreView = (TextView) findViewById(badServeTextA);
+         scoreView.setText(String.valueOf(score));
+
+     }
+    public void displayForBadServeB(int score) {
+        TextView scoreView = (TextView) findViewById(badServeTextB);
         scoreView.setText(String.valueOf(score));
     }
     public void resetTheScores(View v){
-        SetsA = 0;
-        SetsB = 0;
-        ScoreA = 0;
-        ScoreB = 0;
-        displayForSetsA(SetsA);
-        displayForSetsB(SetsB);
-        displayForPlayerA(ScoreA);
-        displayForPlayerB(ScoreB);
+        setsA = 0;
+        setsB = 0;
+        scoreA = 0;
+        scoreB = 0;
+        badServeA = 0;
+        badServeB = 0;
+
+
+        
+        displayWinnerText("");
+        displayForSetsA(setsA);
+        displayForSetsB(setsB);
+        displayForPlayerA(scoreA);
+        displayForPlayerB(scoreB);
+        displayForBadServeA(badServeA);
+        displayForBadServeB(badServeB);
+        SetButtonsState(true);
 
     }
+    public void AddPointToPlayer(int player) {
+
+        if(player==0) {
+           scoreA += 1;
+            displayForPlayerA(scoreA);
+            badServeA=0;
+            displayForBadServeA(badServeA);
+            badServeB=0;
+            displayForBadServeB(badServeB);
+        }
+        else{
+            scoreB+=1;
+            displayForPlayerB(scoreB);
+            badServeB=0;
+            displayForBadServeB(badServeB);
+            badServeA=0;
+            displayForBadServeA(badServeA);
+        }
+        if ((scoreA >= 11 || scoreB >= 11 ) && Math.abs(scoreA-scoreB)>=2 ) {
+            if(scoreA>scoreB){
+                setsA++;
+
+            }
+            else{
+                setsB++;
+            }
+            scoreA=0;
+            scoreB=0;
+            displayForPlayerA(scoreA);
+            displayForPlayerB(scoreB);
+            displayForSetsA(setsA);
+            displayForSetsB(setsB);
+            if(setsA ==3){
+                displayWinnerMessage(0);
+                SetButtonsState(false);
+
+            }
+            if (setsB==3){
+                displayWinnerMessage(1);
+                SetButtonsState(false);
+
+            }
+
+        }
+
+
+
+
+
     }
+    public void displayWinnerMessage(int player) {
+        TextView Textwinner;
+        String playerName;
+        if (player == 0) {
+            playerName = "Player A";
+            Textwinner = (TextView) findViewById(WinnerText);
+        } else {
+            playerName = "Player B";
+            Textwinner = (TextView) findViewById(WinnerText);
+        }
+
+        String WinnerMessage = "The Winner is " + playerName + "!";
+        Textwinner.setText(WinnerMessage);
+
+
+    }
+    public void badServesA(View view){ badServePoint(2);}
+    public void badServesB(View view) {badServePoint(3);}
+
+    public void badServePoint(int serves){
+        if(serves==2){
+        badServeA ++;
+            displayForBadServeA(badServeA);
+        } else{
+            badServeB ++;
+            displayForBadServeB(badServeB);
+        }
+        if(badServeA >= 3){
+            AddPointToPlayer(1);
+            badServeA = 0;
+            displayForBadServeA(badServeA);
+            badServeB=0;
+            displayForBadServeB(badServeB);
+        }
+        if (badServeB >= 3){
+            AddPointToPlayer(0);
+            badServeB = 0;
+            displayForBadServeB(badServeB);
+            badServeA = 0;
+            displayForBadServeA(badServeA);
+        }
+
+
+        }
+
+
+
+
+
+    public void SetButtonsState(boolean state){
+        Button buttonA= (Button) findViewById(R.id.buttonA);
+        Button buttonB= (Button) findViewById(R.id.buttonB);
+        Button badServeButtonA = (Button) findViewById(R.id.badServeButtonA);
+        Button badServeButtonB = (Button) findViewById(R.id.badServeButtonB);
+        buttonA.setEnabled(state);
+        buttonB.setEnabled(state);
+        badServeButtonA.setEnabled(state);
+        badServeButtonB.setEnabled(state);
+
+    }
+
+}
